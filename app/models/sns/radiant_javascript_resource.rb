@@ -1,7 +1,7 @@
 #
 # Javascripts
 #
-class Sns::RadiantJavascriptResource < RadiantFileResource
+class Sns::RadiantJavascriptResource < Sns::RadiantSnsResource
 
   #
   # Initialize a file resource
@@ -9,11 +9,7 @@ class Sns::RadiantJavascriptResource < RadiantFileResource
   #
   def initialize(record)
     @record = record
-    if record.name =~ /\.js$/
-      @path = "javascripts/#{record.name}"
-    else
-      @path = "javascripts/#{record.name}.js"
-    end
+    @path = record.name =~ /\.js$/ ? "javascripts/#{record.name}" :  "javascripts/#{record.name}.js"
   end
 
   def getcontenttype

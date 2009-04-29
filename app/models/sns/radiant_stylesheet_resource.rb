@@ -1,7 +1,7 @@
 #
 # Stylesheet
 #
-class Sns::RadiantStylesheetResource < RadiantFileResource
+class Sns::RadiantStylesheetResource < Sns::RadiantSnsResource
 
   #
   # Initialize a file resource
@@ -9,14 +9,23 @@ class Sns::RadiantStylesheetResource < RadiantFileResource
   #
   def initialize(record)
     @record = record
-    if record.name =~ /\.css$/
-      @path = "stylesheets/#{record.name}"
-    else
-      @path = "stylesheets/#{record.name}.css"
-    end
+    @path = (Object.const_defined?(:SnsSassFilterExtension) && record.filter_id == 'Sass') ? style_path('sass') : style_path('css')
   end
 
   def getcontenttype
     "text/css"
   end
+
+  private
+
+    #
+    # Sets the path for a css stylesheet
+    # +type+ The stylesheet type
+    #
+    # Returns the path of the stylesheet
+    #
+    def style_path(type)
+      @record.name =~ /\.#{type}$/ ? "stylesheets/#{@record.name}" :  "stylesheets/#{@record.name}.#{type}"
+    end
+
 end
