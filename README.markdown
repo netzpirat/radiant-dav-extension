@@ -47,7 +47,11 @@ The Dav extension incorporates with the following Radiant extensions:
 ### [Styles 'n Scripts](http://github.com/SwankInnovations/radiant-sns-extension/tree/master)
 
 If the Styles 'n Scripts extension is installed, the javascripts and stylesheets 
-will also be accessible.
+will also be accessible and the text asset cache will be cleared on writing a resource back.
+
+### [Styles 'n Scripts Sass Filter](http://github.com/SwankInnovations/radiant-sns-sass-filter-extension/tree/master)
+
+Sass file will be exposed with the .sass file extension, so your editor will recognize sass file editing.
 
 ### [Language Redirect](http://github.com/intinig/radiant_language_redirect_extension/tree/master)
 
