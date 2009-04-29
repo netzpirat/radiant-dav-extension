@@ -205,12 +205,19 @@ class RadiantBaseResource
       # SnS Extension
 
       if Object.const_defined?(:SnsExtension)
+
+        # JavaScripts
+
         @children << RadiantDirectoryResource.new('javascripts') do
           Javascript.find(:all).map {|l| Sns::RadiantJavascriptResource.new(l) }
         end if user.developer? || user.admin?
+
+        # Stylesheets
+
         @children << RadiantDirectoryResource.new('stylesheets') do
           Stylesheet.find(:all).map {|l| Sns::RadiantStylesheetResource.new(l) }
         end if user.developer? || user.admin?
+
       end
 
       @prepared = true
