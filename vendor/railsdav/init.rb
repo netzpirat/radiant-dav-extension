@@ -6,6 +6,7 @@ require 'railsdav'
 if defined? ActionController::AbstractRequest::HTTP_METHODS
   ActionController::AbstractRequest::HTTP_METHODS << 'propfind'
   ActionController::AbstractRequest::HTTP_METHODS << 'lock'
+  ActionController::AbstractRequest::HTTP_METHOD_LOOKUP = ActionController::AbstractRequest::HTTP_METHODS.inject({}) { |h, m| h[m] = h[m.upcase] = m.to_sym; h }
 end
 
 if defined? ActionController::ACCEPTED_HTTP_METHODS
