@@ -41,7 +41,7 @@ class RadiantFileResource < RadiantBaseResource
   end
 
   #
-  # returns the file data
+  # re turns the file data
   #
   def data
     record.content

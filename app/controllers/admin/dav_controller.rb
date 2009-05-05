@@ -31,8 +31,13 @@ class Admin::DavController < ApplicationController
     end
 
     logger.debug "Radiant WebDAV: write_content_to_path(#{path.inspect}, #{content})"
-    @root.get_resource(path).write!(content);
-    cache.clear
+    resource = @root.get_resource(path)
+    if resource
+      resource.write!(content);
+      cache.clear
+    else
+      @root.create_resource(path, content)
+    end
   end
 
   #

@@ -140,6 +140,22 @@ class RadiantBaseResource
   end
 
   #
+  # Creates a new resource
+  #
+  def create_resource(resource_path, content)
+    if Object.const_defined?(:PaperclippedExtension) && resource_path.starts_with?('assets')
+      #upload = Tempfile.new(File.basename(resource_path))
+      #upload.puts(content)
+      #asset = Asset.create
+      #asset.asset(upload)
+      #asset.save!
+    else
+      raise WebDavErrors::ForbiddenError
+    end
+
+  end
+
+  #
   # Returns the url of this resource
   #
   def href
@@ -193,13 +209,13 @@ class RadiantBaseResource
       # Snippets
 
       @children << RadiantDirectoryResource.new('snippets') do
-        Snippet.find(:all).map {|s| Radiant::RadiantSnippetResource.new(s) }
+        Snippet.find(:all).map {|snippet| Radiant::RadiantSnippetResource.new(snippet) }
       end if user.developer? || user.admin?
 
       # Layouts
 
       @children << RadiantDirectoryResource.new('layouts') do
-        Layout.find(:all).map {|l| Radiant::RadiantLayoutResource.new(l) }
+        Layout.find(:all).map {|layout| Radiant::RadiantLayoutResource.new(layout) }
       end if user.developer? || user.admin?
 
       # SnS Extension
@@ -209,15 +225,23 @@ class RadiantBaseResource
         # JavaScripts
 
         @children << RadiantDirectoryResource.new('javascripts') do
-          Javascript.find(:all).map {|l| Sns::RadiantJavascriptResource.new(l) }
+          Javascript.find(:all).map {|javascript| Sns::RadiantJavascriptResource.new(javascript) }
         end if user.developer? || user.admin?
 
         # Stylesheets
 
         @children << RadiantDirectoryResource.new('stylesheets') do
-          Stylesheet.find(:all).map {|l| Sns::RadiantStylesheetResource.new(l) }
+          Stylesheet.find(:all).map {|stylesheet| Sns::RadiantStylesheetResource.new(stylesheet) }
         end if user.developer? || user.admin?
 
+      end
+
+      # Paperclipped Extension
+
+      if Object.const_defined?(:PaperclippedExtension)
+        @children << RadiantDirectoryResource.new('assets') do
+           Asset.find(:all).map {|asset| Paperclipped::RadiantAssetResource.new(asset) }
+        end
       end
 
       @prepared = true

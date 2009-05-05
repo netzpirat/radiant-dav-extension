@@ -15,7 +15,7 @@ class RadiantDirectoryResource < RadiantBaseResource
   end
 
   #
-  # children fot this directory
+  # children for this directory
   #
   def children
     @children
