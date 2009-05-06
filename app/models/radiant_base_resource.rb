@@ -187,9 +187,7 @@ class RadiantBaseResource
     case record.filter_id
       when '', 'WymEditor'
         return "text/html"
-      when 'Textile'
-        return "text/plain"
-      when 'Markdown'
+      when 'Textile', 'Markdown'
         return "text/plain"
     end
   end
