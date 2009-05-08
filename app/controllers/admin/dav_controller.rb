@@ -30,7 +30,7 @@ class Admin::DavController < ApplicationController
       component.starts_with?('.') || component == 'mach_kernel' || component == 'Backups.backupdb'
     end
 
-    logger.debug "Radiant WebDAV: write_content_to_path(#{path.inspect}, #{content})"
+    logger.debug "Radiant WebDAV: write_content_to_path(#{path.inspect}"
     resource = @root.get_resource(path)
     if resource
       resource.write!(content);
