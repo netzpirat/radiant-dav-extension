@@ -43,7 +43,12 @@ class Paperclipped::RadiantAssetResource < RadiantFileResource
     record.asset.reprocess!
     record.save
   end
- 
+
+  def delete!
+    record.asset.destroy
+    record.destroy
+  end
+  
   private
 
     def absolute_asset_path
