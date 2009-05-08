@@ -21,6 +21,7 @@ It depends on your Radiant privileges what content will be exposed:
 ### Users
 
 * Pages
+* Assets
 
 ### Developers and administrators
 
@@ -57,6 +58,10 @@ Sass file will be exposed with the .sass file extension, so your editor will rec
 
 If a page type is set to LanguageRedirect, the configuration will be parsed and
 each language goes into its own language folder.
+
+### [Paperclipped](git://github.com/kbingman/paperclipped.git)
+
+Paperclipped assets can be uploaded, replaced, downloaded and deleted.
 
 Todo
 ----
