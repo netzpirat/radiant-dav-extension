@@ -12,6 +12,20 @@ class Paperclipped::RadiantAssetResource < RadiantFileResource
     @path = "assets/#{record.asset_file_name}"
   end
 
+  #
+  # Creates a new paperclip asset
+  # +path+ the resource path
+  # +content+ the resource content
+  #
+  def self.create(path, content)
+    name = File.basename(path)
+    upload = Tempfile.new(name)
+    upload.puts(content)
+    asset = Asset.create
+    asset.asset.assign(upload)
+    asset.save!
+  end
+
   def getcontenttype
     @record.asset_content_type
   end

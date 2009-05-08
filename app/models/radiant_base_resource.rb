@@ -144,15 +144,10 @@ class RadiantBaseResource
   #
   def create_resource(resource_path, content)
     if Object.const_defined?(:PaperclippedExtension) && resource_path.starts_with?('assets')
-      #upload = Tempfile.new(File.basename(resource_path))
-      #upload.puts(content)
-      #asset = Asset.create
-      #asset.asset(upload)
-      #asset.save!
+      Paperclipped::RadiantAssetResource.create(resource_path, content)
     else
       raise WebDavErrors::ForbiddenError
     end
-
   end
 
   #
@@ -244,5 +239,7 @@ class RadiantBaseResource
 
       @prepared = true
     end
+
   end
+  
 end
