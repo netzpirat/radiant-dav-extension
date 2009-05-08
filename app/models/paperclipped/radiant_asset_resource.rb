@@ -18,12 +18,13 @@ class Paperclipped::RadiantAssetResource < RadiantFileResource
   # +content+ the resource content
   #
   def self.create(path, content)
-    name = File.basename(path)
-    upload = Tempfile.new(name)
-    upload.puts(content)
-    asset = Asset.create
-    asset.asset.assign(upload)
-    asset.save!
+    require 'tmpdir'
+    File.open(File.join(Dir.tmpdir, File.basename(path)), 'w+') do |upload|
+      upload.write(content)
+      asset = Asset.create
+      asset.asset.assign(upload)
+      asset.save!
+    end
   end
 
   def getcontenttype
