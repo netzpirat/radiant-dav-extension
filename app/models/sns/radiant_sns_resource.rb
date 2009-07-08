@@ -8,7 +8,7 @@ class Sns::RadiantSnsResource < RadiantFileResource
   #
   def write!(content)
     super content
-    TextAssetResponseCache.instance.clear
+    Radiant::Cache.clear
   end
 
 end

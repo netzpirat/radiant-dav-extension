@@ -34,7 +34,7 @@ class Admin::DavController < ApplicationController
     resource = @root.get_resource(path)
     if resource
       resource.write!(content);
-      cache.clear
+      Radiant::Cache.clear
     else
       @root.create_resource(path, content)
     end
