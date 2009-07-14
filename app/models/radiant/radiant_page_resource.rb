@@ -16,6 +16,14 @@ class Radiant::RadiantPageResource < RadiantDirectoryResource
     if record.class.to_s == 'LanguageRedirectPage'
       process_language_redirect
     else
+      
+      # Add attached assets
+      if Object.const_defined?(:PaperclippedExtension) && @record.page_attachments
+        @children << RadiantDirectoryResource.new("#{path}/assets") do
+           @record.page_attachments.map {|page_attachments| Paperclipped::RadiantPageAttachmentResource.new(page_attachments, path) }
+        end
+      end
+
       # Add child pages
       @record.children.each do |p|
         @children << Radiant::RadiantPageResource.new("#{path}/#{p.title}", p)
