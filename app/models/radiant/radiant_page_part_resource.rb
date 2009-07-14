@@ -11,7 +11,6 @@ class Radiant::RadiantPagePartResource < RadiantFileResource
   def initialize(path, record)
     @record = record
     @path = "#{path}/#{record.name}#{filter_extension}"
-
   end
 
   def getcontenttype
