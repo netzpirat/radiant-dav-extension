@@ -61,7 +61,7 @@ each language goes into its own language folder.
 
 ### [Paperclipped](git://github.com/kbingman/paperclipped.git)
 
-Paperclipped assets can be uploaded, replaced, downloaded and deleted.
+Paperclipped assets can be uploaded, replaced, downloaded and deleted. Also page attachments will be showed in a separate assets folder within each page.
 
 Todo
 ----
