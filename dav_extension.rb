@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '/vendor/railsdav/init.rb')
+require File.join(File.dirname(__FILE__), '/vendor/railsdav/init')
 
 class DavExtension < Radiant::Extension
   version "1.0"
