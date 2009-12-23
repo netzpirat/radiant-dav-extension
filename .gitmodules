@@ -1,3 +1,0 @@
-[submodule "vendor/railsdav"]
-	path = vendor/railsdav
-	url = git://github.com/jagthedrummer/railsdav.git
