@@ -194,7 +194,7 @@ class RadiantBaseResource
   def prepare(user)
     if Object.const_defined?(:MultiSiteExtension)
       Site.find(:all).each do |site|
-         @children << RadiantDirectoryResource.new(slugalize(site.name)) { prepare_site(user, site) }
+         @children << RadiantDirectoryResource.new(site.name) { prepare_site(user, site) }
       end
     else
       @children = prepare_site(user)
@@ -209,22 +209,22 @@ class RadiantBaseResource
   def prepare_site(user, site=nil)
 
     children = Array.new
-    site_prefix = site ? slugalize(site.name) + '/'  : ''
+    site_prefix = site ? site.name + '/'  : ''
 
     # Pages
 
     Page.current_site = site if site
-    children << Radiant::RadiantPageResource.new("#{site_prefix}pages", Page.find_by_url('/'))
+    children << Radiant::RadiantPageResource.new("#{site_prefix}Pages", Page.find_by_url('/'))
 
     # Snippets
 
-    children << RadiantDirectoryResource.new("#{site_prefix}snippets") do
+    children << RadiantDirectoryResource.new("#{site_prefix}Snippets") do
       Snippet.find(:all).map {|snippet| Radiant::RadiantSnippetResource.new(site_prefix, snippet) }
     end if user.developer? || user.admin?
 
     # Layouts
 
-    children << RadiantDirectoryResource.new("#{site_prefix}layouts") do
+    children << RadiantDirectoryResource.new("#{site_prefix}Layouts") do
       Layout.find(:all).map {|layout| Radiant::RadiantLayoutResource.new(site_prefix, layout) }
     end if user.developer? || user.admin?
 
@@ -234,13 +234,13 @@ class RadiantBaseResource
 
       # JavaScripts
 
-      children << RadiantDirectoryResource.new("#{site_prefix}javascripts") do
+      children << RadiantDirectoryResource.new("#{site_prefix}Javascripts") do
         Javascript.find(:all).map {|javascript| Sns::RadiantJavascriptResource.new(site_prefix, javascript) }
       end if user.developer? || user.admin?
 
       # Stylesheets
 
-      children << RadiantDirectoryResource.new("#{site_prefix}stylesheets") do
+      children << RadiantDirectoryResource.new("#{site_prefix}Stylesheets") do
         Stylesheet.find(:all).map {|stylesheet| Sns::RadiantStylesheetResource.new(site_prefix, stylesheet) }
       end if user.developer? || user.admin?
 
@@ -249,35 +249,20 @@ class RadiantBaseResource
     # Paperclipped Extension
 
     if Object.const_defined?(:PaperclippedExtension)
-      children << RadiantDirectoryResource.new("#{site_prefix}assets") do
+      children << RadiantDirectoryResource.new("#{site_prefix}Assets") do
          Asset.find(:all).map {|asset| Paperclipped::RadiantAssetResource.new(site_prefix, asset) }
       end
     end
 
-    children
-  end
+    # Gallery Extension from local file system only
 
-  #
-  # Generate a nice slug by
-  # http://github.com/henrik/slugalizer
-  #
-  def slugalize(text, separator = "-")
-    re_separator = Regexp.escape(separator)
-    result = decompose(text.to_s)
-    result.gsub!(/[^\x00-\x7F]+/, '')                      # Remove non-ASCII (e.g. diacritics).
-    result.gsub!(/[^a-z0-9\-_\+]+/i, separator)            # Turn non-slug chars into the separator.
-    result.gsub!(/#{re_separator}{2,}/, separator)         # No more than one of the separator in a row.
-    result.gsub!(/^#{re_separator}|#{re_separator}$/, '')  # Remove leading/trailing separator.
-    result.downcase!
-    result
-  end
-
-  def decompose(text)
-    if defined?(ActiveSupport::Multibyte::Handlers)  # Active Support <2.2
-      ActiveSupport::Multibyte::Handlers::UTF8Handler.normalize(text, :kd).to_s
-    else  # ActiveSupport 2.2+
-      ActiveSupport::Multibyte::Chars.new(text).normalize(:kd).to_s
+    if Object.const_defined?(:GalleryExtension) && !Radiant::Config["gallery.storage"].eql?("s3")
+      children << RadiantDirectoryResource.new("#{site_prefix}Galleries") do
+         Gallery.find_all_by_parent_id(nil).map {|gallery| Gallery::RadiantGalleryResource.new("#{site_prefix}Galleries", gallery) }
+      end
     end
+
+    children
   end
 
 end

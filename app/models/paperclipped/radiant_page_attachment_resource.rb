@@ -11,7 +11,7 @@ class Paperclipped::RadiantPageAttachmentResource < Paperclipped::RadiantAssetRe
   def initialize(record, path)
     @attachment = record
     @record = Asset.find_by_id(@attachment.asset_id)
-    @path = "#{path}/assets/#{@record.asset_file_name}" if @record
+    @path = "#{path}/Assets/#{@record.asset_file_name}" if @record
   end
 
 end

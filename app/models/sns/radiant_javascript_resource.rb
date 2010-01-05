@@ -10,7 +10,7 @@ class Sns::RadiantJavascriptResource < Sns::RadiantSnsResource
   #
   def initialize(path_prefix, record)
     @record = record
-    @path = record.name =~ /\.js$/ ? "#{path_prefix}javascripts/#{record.name}" :  "#{path_prefix}javascripts/#{record.name}.js"
+    @path = record.name =~ /\.js$/ ? "#{path_prefix}Javascripts/#{record.name}" :  "#{path_prefix}Javascripts/#{record.name}.js"
   end
 
   def getcontenttype

@@ -10,7 +10,7 @@ class Paperclipped::RadiantAssetResource < RadiantFileResource
   #
   def initialize(path_prefix, record)
     @record = record
-    @path = "#{path_prefix}assets/#{record.asset_file_name}"
+    @path = "#{path_prefix}Assets/#{record.asset_file_name}"
   end
 
   #

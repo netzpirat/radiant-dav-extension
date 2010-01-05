@@ -19,7 +19,7 @@ class Radiant::RadiantPageResource < RadiantDirectoryResource
       
       # Add attached assets
       if Object.const_defined?(:PaperclippedExtension) && @record.page_attachments
-        @children << RadiantDirectoryResource.new("#{path}/assets") do
+        @children << RadiantDirectoryResource.new("#{path}/Assets") do
            @record.page_attachments.map {|page_attachments| Paperclipped::RadiantPageAttachmentResource.new(page_attachments, path) }
         end
       end

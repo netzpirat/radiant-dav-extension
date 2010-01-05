@@ -27,7 +27,7 @@ class Sns::RadiantStylesheetResource < Sns::RadiantSnsResource
     # Returns the path of the stylesheet
     #
     def style_path(path_prefix, type)
-      @record.name =~ /\.#{type}$/ ? "#{path_prefix}stylesheets/#{@record.name}" :  "#{path_prefix}stylesheets/#{@record.name}.#{type}"
+      @record.name =~ /\.#{type}$/ ? "#{path_prefix}Stylesheets/#{@record.name}" :  "#{path_prefix}Stylesheets/#{@record.name}.#{type}"
     end
 
 end

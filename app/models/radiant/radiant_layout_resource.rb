@@ -10,7 +10,7 @@ class Radiant::RadiantLayoutResource < RadiantFileResource
   #
   def initialize(path_prefix, record)
     @record = record
-    @path = "#{path_prefix}layouts/#{record.name}.html"
+    @path = "#{path_prefix}Layouts/#{record.name}.html"
   end
 
   def getcontenttype
