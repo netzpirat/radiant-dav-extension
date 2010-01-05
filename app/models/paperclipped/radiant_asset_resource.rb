@@ -5,11 +5,12 @@ class Paperclipped::RadiantAssetResource < RadiantFileResource
 
   #
   # Initialize an asset resource
+  # +path_prefix+ a prefix to the path
   # +record+ ActiveRecord model
   #
-  def initialize(record)
+  def initialize(path_prefix, record)
     @record = record
-    @path = "assets/#{record.asset_file_name}"
+    @path = "#{path_prefix}assets/#{record.asset_file_name}"
   end
 
   #

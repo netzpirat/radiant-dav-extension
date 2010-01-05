@@ -5,12 +5,12 @@ class Radiant::RadiantSnippetResource < RadiantFileResource
 
   #
   # Initialize a file resource
+  # +path_prefix+ a prefix to the path
   # +record+ ActiveRecord model
   #
-  def initialize(record)
+  def initialize(path_prefix, record)
     @record = record
-    @path = "snippets/#{record.name}#{filter_extension}"
-
+    @path = "#{path_prefix}snippets/#{record.name}#{filter_extension}"
   end
 
   def getcontenttype

@@ -7,7 +7,7 @@ class RadiantDirectoryResource < RadiantBaseResource
   #
   # Initialize the WebDav directory
   # +path+ path of the directory
-  # +&children+ block to retrive the children
+  # +&children+ block to retrieve the children
   #
   def initialize(path, &children)
     @path = path

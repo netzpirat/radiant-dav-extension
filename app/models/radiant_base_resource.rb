@@ -18,7 +18,6 @@ class RadiantBaseResource
     @path = path
     @record = record
     @children = []
-    @prepared = false
   end
 
   #
@@ -193,53 +192,92 @@ class RadiantBaseResource
   # +user+ the logged in user
   #
   def prepare(user)
+    if Object.const_defined?(:MultiSiteExtension)
+      Site.find(:all).each do |site|
+         @children << RadiantDirectoryResource.new(slugalize(site.name)) { prepare_site(user, site) }
+      end
+    else
+      @children = prepare_site(user)
+    end
+  end
 
-    if not @prepared
-      # Pages
+  private
+  
+  #
+  # Prepare resource for a site
+  #
+  def prepare_site(user, site=nil)
 
-      @children << Radiant::RadiantPageResource.new('pages', Page.find_by_url('/'))
+    children = Array.new
+    site_prefix = site ? slugalize(site.name) + '/'  : ''
 
-      # Snippets
+    # Pages
 
-      @children << RadiantDirectoryResource.new('snippets') do
-        Snippet.find(:all).map {|snippet| Radiant::RadiantSnippetResource.new(snippet) }
+    Page.current_site = site if site
+    children << Radiant::RadiantPageResource.new("#{site_prefix}pages", Page.find_by_url('/'))
+
+    # Snippets
+
+    children << RadiantDirectoryResource.new("#{site_prefix}snippets") do
+      Snippet.find(:all).map {|snippet| Radiant::RadiantSnippetResource.new(site_prefix, snippet) }
+    end if user.developer? || user.admin?
+
+    # Layouts
+
+    children << RadiantDirectoryResource.new("#{site_prefix}layouts") do
+      Layout.find(:all).map {|layout| Radiant::RadiantLayoutResource.new(site_prefix, layout) }
+    end if user.developer? || user.admin?
+
+    # SnS Extension
+
+    if Object.const_defined?(:SnsExtension)
+
+      # JavaScripts
+
+      children << RadiantDirectoryResource.new("#{site_prefix}javascripts") do
+        Javascript.find(:all).map {|javascript| Sns::RadiantJavascriptResource.new(site_prefix, javascript) }
       end if user.developer? || user.admin?
 
-      # Layouts
+      # Stylesheets
 
-      @children << RadiantDirectoryResource.new('layouts') do
-        Layout.find(:all).map {|layout| Radiant::RadiantLayoutResource.new(layout) }
+      children << RadiantDirectoryResource.new("#{site_prefix}stylesheets") do
+        Stylesheet.find(:all).map {|stylesheet| Sns::RadiantStylesheetResource.new(site_prefix, stylesheet) }
       end if user.developer? || user.admin?
 
-      # SnS Extension
-
-      if Object.const_defined?(:SnsExtension)
-
-        # JavaScripts
-
-        @children << RadiantDirectoryResource.new('javascripts') do
-          Javascript.find(:all).map {|javascript| Sns::RadiantJavascriptResource.new(javascript) }
-        end if user.developer? || user.admin?
-
-        # Stylesheets
-
-        @children << RadiantDirectoryResource.new('stylesheets') do
-          Stylesheet.find(:all).map {|stylesheet| Sns::RadiantStylesheetResource.new(stylesheet) }
-        end if user.developer? || user.admin?
-
-      end
-
-      # Paperclipped Extension
-
-      if Object.const_defined?(:PaperclippedExtension)
-        @children << RadiantDirectoryResource.new('assets') do
-           Asset.find(:all).map {|asset| Paperclipped::RadiantAssetResource.new(asset) }
-        end
-      end
-
-      @prepared = true
     end
 
+    # Paperclipped Extension
+
+    if Object.const_defined?(:PaperclippedExtension)
+      children << RadiantDirectoryResource.new("#{site_prefix}assets") do
+         Asset.find(:all).map {|asset| Paperclipped::RadiantAssetResource.new(site_prefix, asset) }
+      end
+    end
+
+    children
   end
-  
+
+  #
+  # Generate a nice slug by
+  # http://github.com/henrik/slugalizer
+  #
+  def slugalize(text, separator = "-")
+    re_separator = Regexp.escape(separator)
+    result = decompose(text.to_s)
+    result.gsub!(/[^\x00-\x7F]+/, '')                      # Remove non-ASCII (e.g. diacritics).
+    result.gsub!(/[^a-z0-9\-_\+]+/i, separator)            # Turn non-slug chars into the separator.
+    result.gsub!(/#{re_separator}{2,}/, separator)         # No more than one of the separator in a row.
+    result.gsub!(/^#{re_separator}|#{re_separator}$/, '')  # Remove leading/trailing separator.
+    result.downcase!
+    result
+  end
+
+  def decompose(text)
+    if defined?(ActiveSupport::Multibyte::Handlers)  # Active Support <2.2
+      ActiveSupport::Multibyte::Handlers::UTF8Handler.normalize(text, :kd).to_s
+    else  # ActiveSupport 2.2+
+      ActiveSupport::Multibyte::Chars.new(text).normalize(:kd).to_s
+    end
+  end
+
 end

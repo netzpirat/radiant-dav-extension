@@ -59,9 +59,13 @@ Sass file will be exposed with the .sass file extension, so your editor will rec
 If a page type is set to LanguageRedirect, the configuration will be parsed and
 each language goes into its own language folder.
 
-### [Paperclipped](git://github.com/kbingman/paperclipped.git)
+### [Paperclipped](git://github.com/kbingman/paperclipped/tree/master)
 
 Paperclipped assets can be uploaded, replaced, downloaded and deleted. Also page attachments will be showed in a separate assets folder within each page.
+
+### [Multisite](git://github.com/spanner/git://github.com/spanner/radiant-multi-site-extension/tree/master)
+
+Allows browsing of multiple sites and groups DAV resources by site.
 
 Todo
 ----
